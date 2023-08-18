@@ -1,0 +1,33 @@
+module lending-service
+
+go 1.17
+
+require (
+	github.com/go-chi/chi/v5 v5.0.10
+	github.com/go-chi/cors v1.2.1
+	github.com/go-chi/httplog v0.3.1
+	github.com/go-pg/pg/v10 v10.11.1
+	github.com/google/wire v0.5.0
+	github.com/hellofresh/health-go/v5 v5.3.0
+	github.com/lib/pq v1.10.9
+	github.com/sirupsen/logrus v1.9.3
+)
+
+require (
+	github.com/go-pg/zerochecker v0.2.0 // indirect
+	github.com/jinzhu/copier v0.3.5 // indirect
+	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/mattn/go-colorable v0.1.13 // indirect
+	github.com/mattn/go-isatty v0.0.19 // indirect
+	github.com/rs/zerolog v1.29.1 // indirect
+	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect
+	github.com/vmihailenco/bufpool v0.1.11 // indirect
+	github.com/vmihailenco/msgpack/v5 v5.3.4 // indirect
+	github.com/vmihailenco/tagparser v0.1.2 // indirect
+	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
+	go.opentelemetry.io/otel v1.16.0 // indirect
+	go.opentelemetry.io/otel/trace v1.16.0 // indirect
+	golang.org/x/crypto v0.10.0 // indirect
+	golang.org/x/sys v0.10.0 // indirect
+	mellium.im/sasl v0.3.1 // indirect
+)
