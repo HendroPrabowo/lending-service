@@ -123,6 +123,7 @@ func (svc serviceImpl) ProcessUpdate(dto AccountDto) *wraped_error.Error {
 	}
 
 	copier.CopyWithOption(&entity, &dto, copier.Option{IgnoreEmpty: true, DeepCopy: true})
+	entity.Password = password.Encrypt(entity.Password)
 	entity.UpdatedAt = time_now.Wib().Format(constant.TIMEFORMAT)
 
 	if err := svc.repository.Update(entity); err != nil {
