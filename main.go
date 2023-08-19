@@ -6,12 +6,13 @@ import (
 
 	"lending-service/account"
 	"lending-service/config/database"
+	"lending-service/config/monitoring"
 	"lending-service/constant"
 	"lending-service/health"
 
-	"github.com/go-chi/httplog"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
+	"github.com/go-chi/httplog"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -22,6 +23,7 @@ func initLog() {
 func init() {
 	initLog()
 	database.InitPostgreOrm()
+	monitoring.InitNewRelic()
 }
 
 func main() {
