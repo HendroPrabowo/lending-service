@@ -6,6 +6,6 @@ import (
 
 type Service interface {
 	ProcessRegister(dto AccountDto) *wraped_error.Error
-	ProcessLogin(dto AccountDto) (LoginDto, *wraped_error.Error)
+	ProcessLogin(dto LoginDto) (LoginResponseDto, *wraped_error.Error)
 	ProcessUpdate(dto AccountDto) *wraped_error.Error
 }
