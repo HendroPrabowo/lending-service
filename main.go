@@ -17,8 +17,8 @@ import (
 )
 
 func init() {
-	monitoring.InitNewRelic()
 	monitoring.InitLogger()
+	monitoring.InitNewRelic()
 	database.InitPostgreOrm()
 }
 

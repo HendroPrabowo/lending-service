@@ -73,8 +73,6 @@ github.com/mattn/go-isatty v0.0.19 h1:JITubQf0MOLdlGRuRq+jtsDlekdYPia9ZFsB8h/APP
 github.com/mattn/go-isatty v0.0.19/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
 github.com/newrelic/go-agent/v3 v3.24.1 h1:qJc+cKtc0v9vrsnMHuHy4r6Fh9iigNJj3O3KUKPOD0M=
 github.com/newrelic/go-agent/v3 v3.24.1/go.mod h1:29qGunRQA4+IGWn5WRiqVKA+pqYsCIk4ZK9nwygbKbc=
-github.com/newrelic/go-agent/v3/integrations/logcontext-v2/nrlogrus v1.0.0 h1:i7maT5Pi3qv2xlUU/vm/C5BkG8YMLlIHfIWtMmXz7cY=
-github.com/newrelic/go-agent/v3/integrations/logcontext-v2/nrlogrus v1.0.0/go.mod h1:zYcBp4EDE47PUsZZAzEZ36QGC9YU2Wx9FSQ3goi7cCg=
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e h1:fD57ERR4JtEqsWbfPhv4DMiApHyliiK5xCTNVSPiaAs=
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLANZcx1PVRCS0qkT7pwLkGfwJo4zjcN/Tysno=
 github.com/nxadm/tail v1.4.4 h1:DQuhQpB1tVlglWS2hLQ5OV6B5r8aGxSrPc5Qo6uTN78=
