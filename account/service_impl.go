@@ -89,6 +89,15 @@ func (svc serviceImpl) ProcessLogin(dto AccountDto) (LoginDto, *wraped_error.Err
 		return loginDto, wraped_error.WrapError(err, http.StatusInternalServerError)
 	}
 
+	password, err := password.Decrypt(account.Password)
+	if err != nil {
+		return loginDto, wraped_error.WrapError(err, http.StatusInternalServerError)
+	}
+
+	if dto.Password != password {
+		return loginDto, wraped_error.WrapError(fmt.Errorf("username atau password salah"), http.StatusBadRequest)
+	}
+
 	loginDto, errWrap := svc.generateTokenJwt(account)
 	if errWrap != nil {
 		return loginDto, wraped_error.WrapError(err, http.StatusInternalServerError)
@@ -123,6 +132,7 @@ func (svc serviceImpl) ProcessUpdate(dto AccountDto) *wraped_error.Error {
 	}
 
 	copier.CopyWithOption(&entity, &dto, copier.Option{IgnoreEmpty: true, DeepCopy: true})
+	entity.Password = password.Encrypt(entity.Password)
 	entity.UpdatedAt = time_now.Wib().Format(constant.TIMEFORMAT)
 
 	if err := svc.repository.Update(entity); err != nil {
