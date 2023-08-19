@@ -43,7 +43,7 @@ func main() {
 	accountRoutes, _ := account.InitializeAccount()
 	accountRoutes.RegisterRoutes(r)
 
-	log.Info("Running on port : " + port)
+	log.Info("running on port : " + port)
 	http.ListenAndServe(":"+port, r)
 }
 

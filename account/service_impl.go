@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/mail"
+	"regexp"
 	"time"
 
 	"github.com/go-pg/pg/v10"
@@ -43,13 +44,20 @@ func (svc serviceImpl) ProcessRegister(dto AccountDto) *wraped_error.Error {
 }
 
 func (svc serviceImpl) validateAccountDto(dto AccountDto) error {
-	if err := svc.validateLoginAccountDto(dto); err != nil {
+	if err := validateEmptyString(dto.Username, constant.USERNAME); err != nil {
 		return err
 	}
-	if err := validateEmptyString(dto.Name, "name"); err != nil {
+	isWhitespacePresent := regexp.MustCompile(`\s`).MatchString(dto.Username)
+	if isWhitespacePresent {
+		return fmt.Errorf(constant.ERROR_MESSAGE_USERNAME_CANNOT_CONTAIN_WHITESPACE)
+	}
+	if err := validateEmptyString(dto.Password, constant.PASSWORD); err != nil {
 		return err
 	}
-	if err := validateEmptyString(dto.Email, "email"); err != nil {
+	if err := validateEmptyString(dto.Name, constant.NAME); err != nil {
+		return err
+	}
+	if err := validateEmptyString(dto.Email, constant.EMAIL); err != nil {
 		return err
 	}
 	if _, err := mail.ParseAddress(dto.Email); err != nil {
@@ -58,56 +66,60 @@ func (svc serviceImpl) validateAccountDto(dto AccountDto) error {
 	return nil
 }
 
-func (svc serviceImpl) validateLoginAccountDto(dto AccountDto) error {
-	if err := validateEmptyString(dto.Username, "username"); err != nil {
+func (svc serviceImpl) validateLoginAccountDto(dto LoginDto) error {
+	if err := validateEmptyString(dto.Username, constant.USERNAME); err != nil {
 		return err
 	}
-	if err := validateEmptyString(dto.Password, "password"); err != nil {
+	if err := validateEmptyString(dto.Password, constant.PASSWORD); err != nil {
 		return err
+	}
+	isWhitespacePresent := regexp.MustCompile(`\s`).MatchString(dto.Username)
+	if isWhitespacePresent {
+		return fmt.Errorf(constant.ERROR_MESSAGE_USERNAME_CANNOT_CONTAIN_WHITESPACE)
 	}
 	return nil
 }
 
 func validateEmptyString(text, field string) (err error) {
 	if text == "" {
-		return fmt.Errorf(constant.ErrorMessageCannotEmpty, field)
+		return fmt.Errorf(constant.ERROR_MESSAGE_CANNOT_EMPTY, field)
 	}
 	return
 }
 
-func (svc serviceImpl) ProcessLogin(dto AccountDto) (LoginDto, *wraped_error.Error) {
-	var loginDto LoginDto
+func (svc serviceImpl) ProcessLogin(dto LoginDto) (LoginResponseDto, *wraped_error.Error) {
+	var loginResponseDto LoginResponseDto
 	if err := svc.validateLoginAccountDto(dto); err != nil {
-		return loginDto, wraped_error.WrapError(err, http.StatusBadRequest)
+		return loginResponseDto, wraped_error.WrapError(err, http.StatusBadRequest)
 	}
 
 	account, err := svc.repository.GetByUsername(dto.Username)
 	if err != nil {
 		if err == pg.ErrNoRows {
-			return loginDto, wraped_error.WrapError(fmt.Errorf("usename not found"), http.StatusBadRequest)
+			return loginResponseDto, wraped_error.WrapError(fmt.Errorf("usename not found"), http.StatusBadRequest)
 		}
-		return loginDto, wraped_error.WrapError(err, http.StatusInternalServerError)
+		return loginResponseDto, wraped_error.WrapError(err, http.StatusInternalServerError)
 	}
 
 	password, err := password.Decrypt(account.Password)
 	if err != nil {
-		return loginDto, wraped_error.WrapError(err, http.StatusInternalServerError)
+		return loginResponseDto, wraped_error.WrapError(err, http.StatusInternalServerError)
 	}
 
 	if dto.Password != password {
-		return loginDto, wraped_error.WrapError(fmt.Errorf("username atau password salah"), http.StatusBadRequest)
+		return loginResponseDto, wraped_error.WrapError(fmt.Errorf("username atau password salah"), http.StatusBadRequest)
 	}
 
-	loginDto, errWrap := svc.generateTokenJwt(account)
+	loginResponseDto, errWrap := svc.generateTokenJwt(account)
 	if errWrap != nil {
-		return loginDto, wraped_error.WrapError(err, http.StatusInternalServerError)
+		return loginResponseDto, wraped_error.WrapError(err, http.StatusInternalServerError)
 	}
 
-	return loginDto, nil
+	return loginResponseDto, nil
 }
 
-func (svc serviceImpl) generateTokenJwt(account Account) (LoginDto, *wraped_error.Error) {
-	loginDto := LoginDto{}
+func (svc serviceImpl) generateTokenJwt(account Account) (LoginResponseDto, *wraped_error.Error) {
+	loginResponseDto := LoginResponseDto{}
 	claim := Claims{
 		Account: account,
 		RegisteredClaims: jwt.RegisteredClaims{
@@ -119,10 +131,10 @@ func (svc serviceImpl) generateTokenJwt(account Account) (LoginDto, *wraped_erro
 	tokenClaim := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
 	signedToken, err := tokenClaim.SignedString(constant.JWT_KEY)
 	if err != nil {
-		return loginDto, wraped_error.WrapError(err, http.StatusInternalServerError)
+		return loginResponseDto, wraped_error.WrapError(err, http.StatusInternalServerError)
 	}
-	loginDto.Token = signedToken
-	return loginDto, nil
+	loginResponseDto.Token = signedToken
+	return loginResponseDto, nil
 }
 
 func (svc serviceImpl) ProcessUpdate(dto AccountDto) *wraped_error.Error {

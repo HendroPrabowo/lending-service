@@ -33,19 +33,19 @@ func (c controller) Register(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c controller) Login(w http.ResponseWriter, r *http.Request) {
-	var dto AccountDto
+	var dto LoginDto
 	if err := json.NewDecoder(r.Body).Decode(&dto); err != nil {
 		response.ErrorWithMessage(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	loginDto, err := c.service.ProcessLogin(dto)
+	loginResponseDto, err := c.service.ProcessLogin(dto)
 	if err != nil {
 		response.ErrorWrapped(w, err)
 		return
 	}
 
-	response.Ok(w, loginDto)
+	response.Ok(w, loginResponseDto)
 }
 
 func (c controller) Update(w http.ResponseWriter, r *http.Request) {
