@@ -8,4 +8,5 @@ type Account struct {
 	Name      string
 	Email     string
 	CreatedAt string
+	UpdatedAt string
 }

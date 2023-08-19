@@ -12,6 +12,7 @@ func InitializeAccount() (routes, error) {
 	accountRepositoryImpl := newRepository()
 	accountServiceImpl := newService(accountRepositoryImpl)
 	accountController := newController(accountServiceImpl)
-	accountRoutes := newRoutes(accountController)
+	accountMiddleware := newMiddleware()
+	accountRoutes := newRoutes(accountController, accountMiddleware)
 	return accountRoutes, nil
 }

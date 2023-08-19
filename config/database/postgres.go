@@ -8,7 +8,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-var Orm *pg.DB
+var Postgres *pg.DB
 
 func InitPostgreOrm() {
 	opt, err := pg.ParseURL(PostgreDev)
@@ -19,6 +19,6 @@ func InitPostgreOrm() {
 	if err := db.Ping(context.Background()); err != nil {
 		log.Fatal(err)
 	}
-	Orm = db
-	log.Println("Connected to database ORM")
+	Postgres = db
+	log.Println("Connected to database POSTGRES")
 }

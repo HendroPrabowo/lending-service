@@ -8,10 +8,10 @@ import (
 )
 
 type controller struct {
-	service service
+	service Service
 }
 
-func newController(service service) controller {
+func newController(service Service) controller {
 	return controller{
 		service: service,
 	}
@@ -25,6 +25,38 @@ func (c controller) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := c.service.ProcessRegister(dto); err != nil {
+		response.ErrorWrapped(w, err)
+		return
+	}
+
+	response.OkWithMessage(w, "success")
+}
+
+func (c controller) Login(w http.ResponseWriter, r *http.Request) {
+	var dto AccountDto
+	if err := json.NewDecoder(r.Body).Decode(&dto); err != nil {
+		response.ErrorWithMessage(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	loginDto, err := c.service.ProcessLogin(dto)
+	if err != nil {
+		response.ErrorWrapped(w, err)
+		return
+	}
+
+	response.Ok(w, loginDto)
+}
+
+func (c controller) Update(w http.ResponseWriter, r *http.Request) {
+	// can only update name, email, password
+	var dto AccountDto
+	if err := json.NewDecoder(r.Body).Decode(&dto); err != nil {
+		response.ErrorWithMessage(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	if err := c.service.ProcessUpdate(dto); err != nil {
 		response.ErrorWrapped(w, err)
 		return
 	}
