@@ -1,6 +1,6 @@
 module lending-service
 
-go 1.17
+go 1.21
 
 require (
 	github.com/go-chi/chi/v5 v5.0.10
@@ -9,13 +9,14 @@ require (
 	github.com/go-pg/pg/v10 v10.11.1
 	github.com/google/wire v0.5.0
 	github.com/hellofresh/health-go/v5 v5.3.0
+	github.com/jinzhu/copier v0.3.5
 	github.com/lib/pq v1.10.9
 	github.com/sirupsen/logrus v1.9.3
 )
 
 require (
 	github.com/go-pg/zerochecker v0.2.0 // indirect
-	github.com/jinzhu/copier v0.3.5 // indirect
+	github.com/golang-jwt/jwt/v5 v5.0.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
