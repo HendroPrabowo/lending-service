@@ -16,14 +16,10 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func initLog() {
-	log.SetFormatter(&log.JSONFormatter{})
-}
-
 func init() {
-	initLog()
-	database.InitPostgreOrm()
 	monitoring.InitNewRelic()
+	monitoring.InitLogger()
+	database.InitPostgreOrm()
 }
 
 func main() {

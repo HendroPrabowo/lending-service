@@ -22,6 +22,7 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/newrelic/go-agent/v3 v3.24.1 // indirect
+	github.com/newrelic/go-agent/v3/integrations/logcontext-v2/nrlogrus v1.0.0 // indirect
 	github.com/rs/zerolog v1.29.1 // indirect
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect
 	github.com/vmihailenco/bufpool v0.1.11 // indirect
