@@ -21,4 +21,5 @@ type LoginDto struct {
 
 type LoginResponseDto struct {
 	Token string `json:"token"`
+	Name  string `json:"name"`
 }
