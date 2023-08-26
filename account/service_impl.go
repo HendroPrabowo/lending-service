@@ -115,6 +115,7 @@ func (svc serviceImpl) ProcessLogin(dto LoginDto) (LoginResponseDto, *wraped_err
 		return loginResponseDto, wraped_error.WrapError(err, http.StatusInternalServerError)
 	}
 
+	loginResponseDto.Name = account.Name
 	return loginResponseDto, nil
 }
 
