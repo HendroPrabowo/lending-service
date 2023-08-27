@@ -153,3 +153,13 @@ func (svc serviceImpl) ProcessUpdate(dto AccountDto) *wraped_error.Error {
 	}
 	return nil
 }
+
+func (svc serviceImpl) ProcessGetAccount(name string) ([]AccountListDto, *wraped_error.Error) {
+	accountListEntity, err := svc.repository.GetByName(name)
+	if err != nil {
+		return nil, wraped_error.WrapError(err, http.StatusInternalServerError)
+	}
+	accountListDto := []AccountListDto{}
+	copier.Copy(&accountListDto, &accountListEntity)
+	return accountListDto, nil
+}

@@ -8,4 +8,5 @@ type Service interface {
 	ProcessRegister(dto AccountDto) *wraped_error.Error
 	ProcessLogin(dto LoginDto) (LoginResponseDto, *wraped_error.Error)
 	ProcessUpdate(dto AccountDto) *wraped_error.Error
+	ProcessGetAccount(name string) ([]AccountListDto, *wraped_error.Error)
 }

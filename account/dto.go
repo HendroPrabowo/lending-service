@@ -9,6 +9,11 @@ type AccountDto struct {
 	Email    string `json:"email"`
 }
 
+type AccountListDto struct {
+	Id   int    `json:"id"`
+	Name string `json:"name"`
+}
+
 type Claims struct {
 	Account
 	jwt.RegisteredClaims

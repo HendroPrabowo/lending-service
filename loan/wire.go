@@ -1,21 +1,23 @@
 //+build wireinject
 
-package account
+package loan
 
 import (
 	"github.com/google/wire"
+
+	"lending-service/account"
 )
 
-func InitializeAccount() (routes, error) {
+func InitializeLoan() (routes, error) {
 	wire.Build(
 		newRoutes,
+		account.NewMiddleware,
 		newController,
 		newService,
 		newRepository,
-		NewMiddleware,
 
 		wire.Bind(new(Service), new(serviceImpl)),
-		wire.Bind(new(Repository), new(repositoryImpl)),
+		wire.Bind(new(repository), new(repositoryImpl)),
 	)
 	return routes{}, nil
 }

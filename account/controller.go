@@ -63,3 +63,15 @@ func (c controller) Update(w http.ResponseWriter, r *http.Request) {
 
 	response.OkWithMessage(w, "success")
 }
+
+func (c controller) GetAccount(w http.ResponseWriter, r *http.Request) {
+	name := r.URL.Query().Get("name")
+
+	accountListDto, err := c.service.ProcessGetAccount(name)
+	if err != nil {
+		response.ErrorWrapped(w, err)
+		return
+	}
+
+	response.Ok(w, accountListDto)
+}
