@@ -116,6 +116,7 @@ func (svc serviceImpl) ProcessLogin(dto LoginDto) (LoginResponseDto, *wraped_err
 	}
 
 	loginResponseDto.Name = account.Name
+	loginResponseDto.Id = account.Id
 	return loginResponseDto, nil
 }
 

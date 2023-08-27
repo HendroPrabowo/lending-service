@@ -23,6 +23,7 @@ func newRoutes(controller controller, middleware account.Middleware) routes {
 func (routes routes) RegisterRoutes(r *chi.Mux) {
 	r.Group(func(r chi.Router) {
 		r.Use(routes.middleware.ValidateToken)
+		r.Get(newrelic.WrapHandleFunc(monitoring.NewrelicApp, "/api/v1/loan", routes.controller.GetLoan))
 		r.Post(newrelic.WrapHandleFunc(monitoring.NewrelicApp, "/api/v1/loan", routes.controller.AddLoan))
 	})
 }

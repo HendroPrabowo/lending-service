@@ -19,6 +19,16 @@ func newController(service Service) controller {
 	}
 }
 
+func (c controller) GetLoan(w http.ResponseWriter, r *http.Request) {
+	account := r.Context().Value(constant.ACCOUNT).(account.Account)
+	loansDto, err := c.service.ProceddGetLoan(account)
+	if err != nil {
+		response.ErrorWrapped(w, err)
+		return
+	}
+	response.Ok(w, loansDto)
+}
+
 func (c controller) AddLoan(w http.ResponseWriter, r *http.Request) {
 	var loanDto LoanDto
 	if err := json.NewDecoder(r.Body).Decode(&loanDto); err != nil {

@@ -3,11 +3,12 @@ package loan
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"lending-service/account"
 	"lending-service/constant"
 	"lending-service/utility/wraped_error"
+
+	"github.com/jinzhu/copier"
 )
 
 type serviceImpl struct {
@@ -33,11 +34,10 @@ func (svc serviceImpl) ProceddAddLoan(loanDto LoanDto, account account.Account) 
 }
 
 func (svc serviceImpl) constructLoan(dto LoanDto, account account.Account) Loan {
-	amount, _ := strconv.Atoi(dto.Amount)
 	loan := Loan{
 		Lender:      account.Id,
 		Borrower:    dto.Borrower,
-		Amount:      amount,
+		Amount:      dto.Amount,
 		Status:      constant.LOAN_STATUS_UNPAID,
 		Description: dto.Description,
 	}
@@ -51,15 +51,18 @@ func (svc serviceImpl) validateLoanDto(dto LoanDto) error {
 	if dto.Description == "" {
 		return fmt.Errorf("description cannot empty")
 	}
-	if dto.Amount == "" {
-		return fmt.Errorf("ammount cannot empty")
-	}
-	amount, err := strconv.Atoi(dto.Amount)
-	if err != nil {
-		return fmt.Errorf("amount must in number")
-	}
-	if amount <= 0 {
+	if dto.Amount <= 0 {
 		return fmt.Errorf("ammount cannot empty")
 	}
 	return nil
+}
+
+func (svc serviceImpl) ProceddGetLoan(account account.Account) ([]LoanDto, *wraped_error.Error) {
+	loansEntity, err := svc.repository.GetLoan(account)
+	if err != nil {
+		return nil, wraped_error.WrapError(err, http.StatusInternalServerError)
+	}
+	var loans []LoanDto
+	copier.Copy(&loans, &loansEntity)
+	return loans, nil
 }
