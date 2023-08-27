@@ -9,6 +9,7 @@ import (
 	"lending-service/config/monitoring"
 	"lending-service/constant"
 	"lending-service/health"
+	"lending-service/loan"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
@@ -42,6 +43,9 @@ func main() {
 
 	accountRoutes, _ := account.InitializeAccount()
 	accountRoutes.RegisterRoutes(r)
+
+	loanRoutes, _ := loan.InitializeLoan()
+	loanRoutes.RegisterRoutes(r)
 
 	log.Info("running on port : " + port)
 	http.ListenAndServe(":"+port, r)

@@ -29,3 +29,9 @@ func (r repositoryImpl) Update(account Account) error {
 		Update()
 	return err
 }
+
+func (r repositoryImpl) GetByName(name string) ([]Account, error) {
+	var accounts []Account
+	err := database.Postgres.Model(&accounts).Where("name LIKE ?", name+"%").Order("name ASC").Select()
+	return accounts, err
+}

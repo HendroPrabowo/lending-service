@@ -15,14 +15,14 @@ import (
 	"lending-service/utility/wraped_error"
 )
 
-type middleware struct {
+type Middleware struct {
 }
 
-func newMiddleware() middleware {
-	return middleware{}
+func NewMiddleware() Middleware {
+	return Middleware{}
 }
 
-func (m middleware) validateToken(next http.Handler) http.Handler {
+func (m Middleware) ValidateToken(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authorizationHeader := r.Header.Get("Authorization")
 		if len(authorizationHeader) <= 0 {
@@ -64,7 +64,7 @@ func (m middleware) validateToken(next http.Handler) http.Handler {
 			return
 		}
 
-		ctx := context.WithValue(context.Background(), "account", account)
+		ctx := context.WithValue(context.Background(), constant.ACCOUNT, account)
 		r = r.WithContext(ctx)
 		next.ServeHTTP(w, r)
 	})
