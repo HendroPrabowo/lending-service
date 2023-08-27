@@ -7,4 +7,5 @@ import (
 
 type Service interface {
 	ProceddAddLoan(loanDto LoanDto, account account.Account) *wraped_error.Error
+	ProceddGetLoan(account account.Account) ([]LoanDto, *wraped_error.Error)
 }
