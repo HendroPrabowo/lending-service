@@ -9,8 +9,8 @@ package account
 // Injectors from wire.go:
 
 func InitializeAccount() (routes, error) {
-	accountRepositoryImpl := newRepository()
-	accountServiceImpl := newService(accountRepositoryImpl)
+	repositoryImpl := NewRepository()
+	accountServiceImpl := newService(repositoryImpl)
 	accountController := newController(accountServiceImpl)
 	middleware := NewMiddleware()
 	accountRoutes := newRoutes(accountController, middleware)

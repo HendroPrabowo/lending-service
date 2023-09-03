@@ -11,11 +11,11 @@ func InitializeAccount() (routes, error) {
 		newRoutes,
 		newController,
 		newService,
-		newRepository,
+		NewRepository,
 		NewMiddleware,
 
 		wire.Bind(new(Service), new(serviceImpl)),
-		wire.Bind(new(Repository), new(repositoryImpl)),
+		wire.Bind(new(Repository), new(RepositoryImpl)),
 	)
 	return routes{}, nil
 }
