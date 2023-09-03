@@ -4,25 +4,25 @@ import (
 	"lending-service/config/database"
 )
 
-type repositoryImpl struct {
+type RepositoryImpl struct {
 }
 
-func newRepository() repositoryImpl {
-	return repositoryImpl{}
+func NewRepository() RepositoryImpl {
+	return RepositoryImpl{}
 }
 
-func (r repositoryImpl) InsertToDb(entity Account) error {
+func (r RepositoryImpl) InsertToDb(entity Account) error {
 	_, err := database.Postgres.Model(&entity).Insert()
 	return err
 }
 
-func (r repositoryImpl) GetByUsername(username string) (Account, error) {
+func (r RepositoryImpl) GetByUsername(username string) (Account, error) {
 	account := new(Account)
 	err := database.Postgres.Model(account).Where("username = ?", username).Select()
 	return *account, err
 }
 
-func (r repositoryImpl) Update(account Account) error {
+func (r RepositoryImpl) Update(account Account) error {
 	_, err := database.Postgres.Model(&account).
 		Column("password", "name", "email", "updated_at").
 		WherePK().
@@ -30,8 +30,14 @@ func (r repositoryImpl) Update(account Account) error {
 	return err
 }
 
-func (r repositoryImpl) GetByName(name string) ([]Account, error) {
+func (r RepositoryImpl) GetByName(name string) ([]Account, error) {
 	var accounts []Account
 	err := database.Postgres.Model(&accounts).Where("name LIKE ?", name+"%").Order("name ASC").Select()
 	return accounts, err
+}
+
+func (r RepositoryImpl) GetById(id int) (Account, error) {
+	var account Account
+	err := database.Postgres.Model(&account).Where("id = ?", id).Select()
+	return account, err
 }

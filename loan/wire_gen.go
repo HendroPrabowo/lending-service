@@ -14,7 +14,8 @@ import (
 
 func InitializeLoan() (routes, error) {
 	loanRepositoryImpl := newRepository()
-	loanServiceImpl := newService(loanRepositoryImpl)
+	accountRepositoryImpl := account.NewRepository()
+	loanServiceImpl := newService(loanRepositoryImpl, accountRepositoryImpl)
 	loanController := newController(loanServiceImpl)
 	middleware := account.NewMiddleware()
 	loanRoutes := newRoutes(loanController, middleware)

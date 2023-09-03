@@ -12,12 +12,14 @@ import (
 )
 
 type serviceImpl struct {
-	repository repository
+	repository        repository
+	accountRepository account.Repository
 }
 
-func newService(repository repository) serviceImpl {
+func newService(repository repository, accountRepository account.Repository) serviceImpl {
 	return serviceImpl{
-		repository: repository,
+		repository:        repository,
+		accountRepository: accountRepository,
 	}
 }
 
@@ -58,11 +60,42 @@ func (svc serviceImpl) validateLoanDto(dto LoanDto) error {
 }
 
 func (svc serviceImpl) ProceddGetLoan(account account.Account) ([]LoanDto, *wraped_error.Error) {
+	// initial memory cache name
+	nameMap := map[int]string{account.Id: account.Name}
+	var loanDtos []LoanDto
+
 	loansEntity, err := svc.repository.GetLoan(account)
 	if err != nil {
 		return nil, wraped_error.WrapError(err, http.StatusInternalServerError)
 	}
-	var loans []LoanDto
-	copier.Copy(&loans, &loansEntity)
-	return loans, nil
+
+	for _, loan := range loansEntity {
+		lenderName, err := svc.getAndSetNameToMap(loan.Lender, nameMap)
+		if err != nil {
+			return nil, wraped_error.WrapError(err, http.StatusInternalServerError)
+		}
+		borrowerName, err := svc.getAndSetNameToMap(loan.Borrower, nameMap)
+		if err != nil {
+			return nil, wraped_error.WrapError(err, http.StatusInternalServerError)
+		}
+		var loanDto LoanDto
+		copier.Copy(&loanDto, &loan)
+		loanDto.BorrowerName = borrowerName
+		loanDto.LenderName = lenderName
+		loanDtos = append(loanDtos, loanDto)
+	}
+	return loanDtos, nil
+}
+
+func (svc serviceImpl) getAndSetNameToMap(accountId int, nameMap map[int]string) (string, error) {
+	name, ok := nameMap[accountId]
+	if !ok {
+		account, err := svc.accountRepository.GetById(accountId)
+		if err != nil {
+			return "", err
+		}
+		nameMap[accountId] = account.Name
+		name = account.Name
+	}
+	return name, nil
 }

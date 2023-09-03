@@ -11,11 +11,12 @@ import (
 var Postgres *pg.DB
 
 func InitPostgreOrm() {
-	opt, err := pg.ParseURL(PostgreDev)
-	if err != nil {
-		log.Fatal(err)
-	}
-	db := pg.Connect(opt)
+	db := pg.Connect(&pg.Options{
+		Addr:     HOST + ":" + PORT,
+		User:     USER,
+		Password: PASSWORD,
+		Database: DATABASE,
+	})
 	if err := db.Ping(context.Background()); err != nil {
 		log.Fatal(err)
 	}

@@ -15,9 +15,11 @@ func InitializeLoan() (routes, error) {
 		newController,
 		newService,
 		newRepository,
+		account.NewRepository,
 
 		wire.Bind(new(Service), new(serviceImpl)),
 		wire.Bind(new(repository), new(repositoryImpl)),
+		wire.Bind(new(account.Repository), new(account.RepositoryImpl)),
 	)
 	return routes{}, nil
 }
