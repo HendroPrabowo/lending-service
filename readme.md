@@ -16,3 +16,4 @@ Simple service to record debt from another person
 #### Expose endpoint to public
 1. [ngrok](https://ngrok.com/)
 2. [localtunnel](https://theboroer.github.io/localtunnel-www/ | lt --port 8080 --subdomain lending-service
+3. serveo | ssh -R 80:localhost:8080 serveo.net
