@@ -25,5 +25,6 @@ func (routes routes) RegisterRoutes(r *chi.Mux) {
 		r.Use(routes.middleware.ValidateToken)
 		r.Get(newrelic.WrapHandleFunc(monitoring.NewrelicApp, "/api/v1/loan", routes.controller.GetLoan))
 		r.Post(newrelic.WrapHandleFunc(monitoring.NewrelicApp, "/api/v1/loan", routes.controller.AddLoan))
+		r.Put(newrelic.WrapHandleFunc(monitoring.NewrelicApp, "/api/v1/loan/status", routes.controller.UpdateStatus))
 	})
 }

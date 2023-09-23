@@ -59,12 +59,12 @@ func (svc serviceImpl) validateLoanDto(dto LoanDto) error {
 	return nil
 }
 
-func (svc serviceImpl) ProceddGetLoan(account account.Account) ([]LoanDto, *wraped_error.Error) {
+func (svc serviceImpl) ProceddGetLoans(account account.Account) ([]LoanDto, *wraped_error.Error) {
 	// initial memory cache name
 	nameMap := map[int]string{account.Id: account.Name}
 	var loanDtos []LoanDto
 
-	loansEntity, err := svc.repository.GetLoan(account)
+	loansEntity, err := svc.repository.GetLoans(account)
 	if err != nil {
 		return nil, wraped_error.WrapError(err, http.StatusInternalServerError)
 	}
@@ -98,4 +98,27 @@ func (svc serviceImpl) getAndSetNameToMap(accountId int, nameMap map[int]string)
 		name = account.Name
 	}
 	return name, nil
+}
+
+func (svc serviceImpl) ChangeLoanStatus(account account.Account, dto LoanStatusDto) *wraped_error.Error {
+	loan, err := svc.repository.GetLoanById(dto.Id)
+	if err != nil {
+		return wraped_error.WrapError(err, http.StatusInternalServerError)
+	}
+
+	valid, ok := loanStatusMap[dto.Status]
+	if !ok || !valid {
+		return wraped_error.WrapError(fmt.Errorf("invalid status : %s", dto.Status), http.StatusBadRequest)
+	}
+
+	if loan.Lender != account.Id && loan.Borrower != account.Id {
+		return wraped_error.WrapError(fmt.Errorf("this loan is not belong to this user"), http.StatusBadRequest)
+	}
+
+	loan.Status = dto.Status
+	if err = svc.repository.UpdateLoan(loan); err != nil {
+		return wraped_error.WrapError(err, http.StatusInternalServerError)
+	}
+
+	return nil
 }

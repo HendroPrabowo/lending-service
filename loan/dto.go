@@ -1,6 +1,7 @@
 package loan
 
 type LoanDto struct {
+	Id           int    `json:"id"`
 	Lender       int    `json:"lender"`
 	LenderName   string `json:"lender_name"`
 	Borrower     int    `json:"borrower"`
@@ -10,4 +11,14 @@ type LoanDto struct {
 	Status       string `json:"status"`
 	CreatedAt    string `json:"created_at"`
 	UpdatedAt    string `json:"updated_at"`
+}
+
+type LoanStatusDto struct {
+	Id     int    `json:"id"`
+	Status string `json:"status"`
+}
+
+var loanStatusMap = map[string]bool{
+	"unpaid": true,
+	"paid":   true,
 }
