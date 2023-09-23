@@ -15,4 +15,4 @@ Simple service to record debt from another person
 
 #### Expose endpoint to public
 1. [ngrok](https://ngrok.com/)
-2. [localtunnel](https://theboroer.github.io/localtunnel-www/)
+2. [localtunnel](https://theboroer.github.io/localtunnel-www/ | lt --port 8080 --subdomain lending-service
