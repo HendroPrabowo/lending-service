@@ -17,9 +17,14 @@ func (r repositoryImpl) InsertToDb(loan Loan) error {
 	return err
 }
 
-func (r repositoryImpl) GetLoans(account account.Account) ([]Loan, error) {
+func (r repositoryImpl) GetLoansWithParameter(account account.Account, queryParameter LoanQueryParameter) ([]Loan, error) {
 	var loans []Loan
-	err := database.Postgres.Model(&loans).Where("lender = ?", account.Id).WhereOr("borrower = ?", account.Id).Order("created_at desc").Select()
+	offset := queryParameter.Page * queryParameter.Limit
+	query := database.Postgres.Model(&loans).Where("lender = ?", account.Id).WhereOr("borrower = ?", account.Id).Order("created_at desc").Offset(offset).Limit(queryParameter.Limit)
+	if queryParameter.Status != "" {
+		query.Where("status = ?", queryParameter.Status)
+	}
+	err := query.Select()
 	return loans, err
 }
 

@@ -59,12 +59,12 @@ func (svc serviceImpl) validateLoanDto(dto LoanDto) error {
 	return nil
 }
 
-func (svc serviceImpl) ProceddGetLoans(account account.Account) ([]LoanDto, *wraped_error.Error) {
+func (svc serviceImpl) ProceedGetLoans(account account.Account, queryParameter LoanQueryParameter) ([]LoanDto, *wraped_error.Error) {
 	// initial memory cache name
 	nameMap := map[int]string{account.Id: account.Name}
-	var loanDtos []LoanDto
+	loanDtos := []LoanDto{}
 
-	loansEntity, err := svc.repository.GetLoans(account)
+	loansEntity, err := svc.repository.GetLoansWithParameter(account, queryParameter)
 	if err != nil {
 		return nil, wraped_error.WrapError(err, http.StatusInternalServerError)
 	}

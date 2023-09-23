@@ -13,6 +13,12 @@ type LoanDto struct {
 	UpdatedAt    string `json:"updated_at"`
 }
 
+type LoanQueryParameter struct {
+	Page   int
+	Limit  int
+	Status string
+}
+
 type LoanStatusDto struct {
 	Id     int    `json:"id"`
 	Status string `json:"status"`
