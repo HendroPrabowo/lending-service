@@ -1,9 +1,9 @@
 package database
 
 const (
-	HOST     = "localhost"
-	PORT     = "5432"
-	USER     = "postgres"
-	PASSWORD = "postgres"
-	DATABASE = "lending"
+	DATABASE_HOST     = "localhost"
+	DATABASE_PORT     = "5432"
+	DATABASE_USER     = "postgres"
+	DATABASE_PASSWORD = "postgres"
+	DATABASE_NAME     = "lending"
 )
