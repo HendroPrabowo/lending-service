@@ -72,7 +72,7 @@ func (c controller) buildLoanQueryParameter(r *http.Request) (LoanQueryParameter
 func (c controller) AddLoan(w http.ResponseWriter, r *http.Request) {
 	var loanDto LoanDto
 	if err := json.NewDecoder(r.Body).Decode(&loanDto); err != nil {
-		response.ErrorWithMessage(w, http.StatusBadRequest, err.Error())
+		response.ErrorWrapped(w, wraped_error.WrapError(err, http.StatusBadRequest))
 		return
 	}
 
@@ -88,7 +88,7 @@ func (c controller) AddLoan(w http.ResponseWriter, r *http.Request) {
 func (c controller) UpdateStatus(w http.ResponseWriter, r *http.Request) {
 	var loanStatusDto LoanStatusDto
 	if err := json.NewDecoder(r.Body).Decode(&loanStatusDto); err != nil {
-		response.ErrorWithMessage(w, http.StatusBadRequest, err.Error())
+		response.ErrorWrapped(w, wraped_error.WrapError(err, http.StatusBadRequest))
 		return
 	}
 
