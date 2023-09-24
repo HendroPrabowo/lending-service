@@ -12,19 +12,19 @@ import (
 var Postgres *pg.DB
 
 func InitPostgreOrm() {
-	host := os.Getenv("HOST")
-	port := os.Getenv("PORT")
-	user := os.Getenv("USER")
-	password := os.Getenv("PASSWORD")
-	database := os.Getenv("DATABASE")
+	host := os.Getenv("DATABASE_HOST")
+	port := os.Getenv("DATABASE_PORT")
+	user := os.Getenv("DATABASE_USER")
+	password := os.Getenv("DATABASE_PASSWORD")
+	database := os.Getenv("DATABASE_NAME")
 
 	if host == "" || port == "" || user == "" || password == "" || database == "" {
 		log.Info("connect to database using localhost")
-		host = HOST
-		port = PORT
-		user = USER
-		password = PASSWORD
-		database = DATABASE
+		host = DATABASE_HOST
+		port = DATABASE_PORT
+		user = DATABASE_USER
+		password = DATABASE_PASSWORD
+		database = DATABASE_NAME
 	}
 
 	db := pg.Connect(&pg.Options{
