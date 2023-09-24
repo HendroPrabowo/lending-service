@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"lending-service/utility/response"
+	"lending-service/utility/wraped_error"
 )
 
 type controller struct {
@@ -20,7 +21,7 @@ func newController(service Service) controller {
 func (c controller) Register(w http.ResponseWriter, r *http.Request) {
 	var dto AccountDto
 	if err := json.NewDecoder(r.Body).Decode(&dto); err != nil {
-		response.ErrorWithMessage(w, http.StatusInternalServerError, err.Error())
+		response.ErrorWrapped(w, wraped_error.WrapError(err, http.StatusBadRequest))
 		return
 	}
 
@@ -35,7 +36,7 @@ func (c controller) Register(w http.ResponseWriter, r *http.Request) {
 func (c controller) Login(w http.ResponseWriter, r *http.Request) {
 	var dto LoginDto
 	if err := json.NewDecoder(r.Body).Decode(&dto); err != nil {
-		response.ErrorWithMessage(w, http.StatusInternalServerError, err.Error())
+		response.ErrorWrapped(w, wraped_error.WrapError(err, http.StatusBadRequest))
 		return
 	}
 
@@ -52,7 +53,7 @@ func (c controller) Update(w http.ResponseWriter, r *http.Request) {
 	// can only update name, email, password
 	var dto AccountDto
 	if err := json.NewDecoder(r.Body).Decode(&dto); err != nil {
-		response.ErrorWithMessage(w, http.StatusInternalServerError, err.Error())
+		response.ErrorWrapped(w, wraped_error.WrapError(err, http.StatusBadRequest))
 		return
 	}
 

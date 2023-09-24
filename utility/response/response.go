@@ -4,9 +4,11 @@ import (
 	"encoding/json"
 	"net/http"
 
-	log "github.com/sirupsen/logrus"
-
 	"lending-service/utility/wraped_error"
+
+	"github.com/bugsnag/bugsnag-go/v2"
+	"github.com/bugsnag/bugsnag-go/v2/errors"
+	log "github.com/sirupsen/logrus"
 )
 
 func Ok(w http.ResponseWriter, resp interface{}) {
@@ -36,6 +38,10 @@ func ErrorWithMessage(w http.ResponseWriter, status int, resp interface{}) {
 }
 
 func ErrorWrapped(w http.ResponseWriter, err *wraped_error.Error) {
+	if err.StatusCode == http.StatusInternalServerError {
+		bugsnag.Notify(errors.New(err.Err, 1))
+	}
+
 	mapResp := map[string]interface{}{"message": err.Err.Error()}
 	w.Header().Set("content-type", "application/json")
 	w.WriteHeader(err.StatusCode)

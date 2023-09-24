@@ -11,6 +11,7 @@ import (
 	"lending-service/health"
 	"lending-service/loan"
 
+	"github.com/bugsnag/bugsnag-go/v2"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/httplog"
@@ -20,6 +21,7 @@ import (
 func init() {
 	monitoring.InitLogger()
 	monitoring.InitNewRelic()
+	monitoring.InitBugsnag()
 	database.InitPostgreOrm()
 }
 
@@ -48,7 +50,7 @@ func main() {
 	loanRoutes.RegisterRoutes(r)
 
 	log.Info("running on port : " + port)
-	http.ListenAndServe(":"+port, r)
+	http.ListenAndServe(":"+port, bugsnag.Handler(r))
 }
 
 func setCors(r *chi.Mux) *chi.Mux {
