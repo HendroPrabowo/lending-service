@@ -20,7 +20,7 @@ func RegisterRoutes(r *chi.Mux) {
 
 	r.Get(newrelic.WrapHandleFunc(monitoring.NewrelicApp, "/", func(w http.ResponseWriter, r *http.Request) {
 		resp := map[string]interface{}{
-			"app_name": "lending-service",
+			"app_name": "welcome lending-service",
 		}
 		response.Ok(w, resp)
 	}))
