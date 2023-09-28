@@ -27,6 +27,8 @@ func InitPostgreOrm() {
 		database = DATABASE_NAME
 	}
 
+	log.Infof("HOST : %s, PORT : %s, USER : %s, PASS : %s, DATABASE : %s", host, port, user, password, database)
+
 	db := pg.Connect(&pg.Options{
 		Addr:     host + ":" + port,
 		User:     user,
