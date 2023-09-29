@@ -27,6 +27,7 @@ func init() {
 
 func main() {
 	port := os.Getenv("PORT")
+	log.Info("system port : " + port)
 	if port == "" {
 		port = "8080"
 	}
