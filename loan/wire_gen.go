@@ -8,14 +8,27 @@ package loan
 
 import (
 	"lending-service/account"
+	"lending-service/config/database"
 )
 
 // Injectors from wire.go:
 
-func InitializeLoan() (routes, error) {
-	loanRepositoryImpl := newRepository()
-	accountRepositoryImpl := account.NewRepository()
-	loanServiceImpl := newService(loanRepositoryImpl, accountRepositoryImpl)
+func InitializeLoanWithPostgres() (routes, error) {
+	db := database.InitPostgreOrm()
+	repositoryPostgresImpl := NewPostgresRepository(db)
+	accountRepositoryPostgresImpl := account.NewPostgresRepository(db)
+	loanServiceImpl := newService(repositoryPostgresImpl, accountRepositoryPostgresImpl)
+	loanController := newController(loanServiceImpl)
+	middleware := account.NewMiddleware()
+	loanRoutes := newRoutes(loanController, middleware)
+	return loanRoutes, nil
+}
+
+func InitializeLoanWithMysql() (routes, error) {
+	db := database.InitMysql()
+	repositoryMysqlImpl := NewMysqlRepository(db)
+	accountRepositoryMysqlImpl := account.NewMysqlRepository(db)
+	loanServiceImpl := newService(repositoryMysqlImpl, accountRepositoryMysqlImpl)
 	loanController := newController(loanServiceImpl)
 	middleware := account.NewMiddleware()
 	loanRoutes := newRoutes(loanController, middleware)

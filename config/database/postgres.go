@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"os"
+	"sync"
 
 	"github.com/go-pg/pg/v10"
 	_ "github.com/lib/pq"
@@ -11,7 +12,18 @@ import (
 
 var Postgres *pg.DB
 
-func InitPostgreOrm() {
+var lock = &sync.Mutex{}
+
+func InitPostgreOrm() *pg.DB {
+	lock.Lock()
+	defer lock.Unlock()
+
+	if Postgres != nil {
+		log.Info("POSTGRES : using existing instance")
+		return Postgres
+	}
+
+	log.Info("POSTGRES : create new instance")
 	host := os.Getenv("DATABASE_HOST")
 	port := os.Getenv("DATABASE_PORT")
 	user := os.Getenv("DATABASE_USER")
@@ -19,7 +31,7 @@ func InitPostgreOrm() {
 	database := os.Getenv("DATABASE_NAME")
 
 	if host == "" || port == "" || user == "" || password == "" || database == "" {
-		log.Info("connect to database using localhost")
+		log.Info("POSTGRES : config from localhost")
 		host = DATABASE_HOST
 		port = DATABASE_PORT
 		user = DATABASE_USER
@@ -37,5 +49,6 @@ func InitPostgreOrm() {
 		log.Fatal(err)
 	}
 	Postgres = db
-	log.Info("connected to database POSTGRES")
+	log.Info("POSTGRES : instance created")
+	return Postgres
 }

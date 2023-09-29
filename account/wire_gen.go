@@ -6,11 +6,26 @@
 
 package account
 
+import (
+	"lending-service/config/database"
+)
+
 // Injectors from wire.go:
 
-func InitializeAccount() (routes, error) {
-	repositoryImpl := NewRepository()
-	accountServiceImpl := newService(repositoryImpl)
+func InitializeAccountWithPostgres() (routes, error) {
+	db := database.InitPostgreOrm()
+	repositoryPostgresImpl := NewPostgresRepository(db)
+	accountServiceImpl := newService(repositoryPostgresImpl)
+	accountController := newController(accountServiceImpl)
+	middleware := NewMiddleware()
+	accountRoutes := newRoutes(accountController, middleware)
+	return accountRoutes, nil
+}
+
+func InitializeAccountWithMysql() (routes, error) {
+	db := database.InitMysql()
+	repositoryMysqlImpl := NewMysqlRepository(db)
+	accountServiceImpl := newService(repositoryMysqlImpl)
 	accountController := newController(accountServiceImpl)
 	middleware := NewMiddleware()
 	accountRoutes := newRoutes(accountController, middleware)

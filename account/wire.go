@@ -4,18 +4,36 @@ package account
 
 import (
 	"github.com/google/wire"
+
+	"lending-service/config/database"
 )
 
-func InitializeAccount() (routes, error) {
+func InitializeAccountWithPostgres() (routes, error) {
 	wire.Build(
 		newRoutes,
 		newController,
 		newService,
-		NewRepository,
+		NewPostgresRepository,
 		NewMiddleware,
+		database.InitPostgreOrm,
 
 		wire.Bind(new(Service), new(serviceImpl)),
-		wire.Bind(new(Repository), new(RepositoryImpl)),
+		wire.Bind(new(Repository), new(RepositoryPostgresImpl)),
+	)
+	return routes{}, nil
+}
+
+func InitializeAccountWithMysql() (routes, error) {
+	wire.Build(
+		newRoutes,
+		newController,
+		newService,
+		NewMysqlRepository,
+		NewMiddleware,
+		database.InitMysql,
+
+		wire.Bind(new(Service), new(serviceImpl)),
+		wire.Bind(new(Repository), new(RepositoryMysqlImpl)),
 	)
 	return routes{}, nil
 }

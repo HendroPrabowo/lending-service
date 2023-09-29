@@ -22,13 +22,17 @@ func init() {
 	monitoring.InitLogger()
 	monitoring.InitNewRelic()
 	monitoring.InitBugsnag()
-	database.InitPostgreOrm()
 }
 
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
+	}
+
+	databaseActive := os.Getenv("DATABASE_ACTIVE")
+	if databaseActive == "" {
+		databaseActive = database.DATABASE_POSTGRES_NAME
 	}
 
 	r := chi.NewRouter()
@@ -43,11 +47,26 @@ func main() {
 	// health check routes
 	health.RegisterRoutes(r)
 
-	accountRoutes, _ := account.InitializeAccount()
-	accountRoutes.RegisterRoutes(r)
+	/**
+		TODO: mocking mysql database
+	 */
+	databaseActive = database.DATABASE_MYSQL_NAME
 
-	loanRoutes, _ := loan.InitializeLoan()
-	loanRoutes.RegisterRoutes(r)
+	log.Info("init service with database : " + databaseActive)
+	if databaseActive == database.DATABASE_POSTGRES_NAME {
+
+		accountRoutes, _ := account.InitializeAccountWithPostgres()
+		accountRoutes.RegisterRoutes(r)
+
+		loanRoutes, _ := loan.InitializeLoanWithPostgres()
+		loanRoutes.RegisterRoutes(r)
+	} else {
+		accountRoutes, _ := account.InitializeAccountWithMysql()
+		accountRoutes.RegisterRoutes(r)
+
+		loanRoutes, _ := loan.InitializeLoanWithMysql()
+		loanRoutes.RegisterRoutes(r)
+	}
 
 	log.Info("running on port : " + port)
 	http.ListenAndServe(":"+port, bugsnag.Handler(r))

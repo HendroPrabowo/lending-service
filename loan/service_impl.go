@@ -12,11 +12,11 @@ import (
 )
 
 type serviceImpl struct {
-	repository        repository
+	repository        Repository
 	accountRepository account.Repository
 }
 
-func newService(repository repository, accountRepository account.Repository) serviceImpl {
+func newService(repository Repository, accountRepository account.Repository) serviceImpl {
 	return serviceImpl{
 		repository:        repository,
 		accountRepository: accountRepository,
