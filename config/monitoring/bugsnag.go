@@ -20,8 +20,8 @@ func InitBugsnag() {
 
 	bugsnag.Configure(bugsnag.Configuration{
 		APIKey:       apiKey,
-		ReleaseStage: "development",
+		ReleaseStage: releaseStage,
 	})
 
-	log.Info("bugsnag connected")
+	log.Info("bugsnag connected : " + releaseStage)
 }
