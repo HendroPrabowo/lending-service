@@ -32,7 +32,7 @@ func (r RepositoryImpl) Update(account Account) error {
 
 func (r RepositoryImpl) GetByName(name string) ([]Account, error) {
 	var accounts []Account
-	err := database.Postgres.Model(&accounts).Where("name LIKE ?", name+"%").Order("name ASC").Select()
+	err := database.Postgres.Model(&accounts).Where("name ILIKE ?", "%"+name+"%").Order("name ASC").Select()
 	return accounts, err
 }
 
