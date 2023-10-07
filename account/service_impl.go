@@ -155,12 +155,24 @@ func (svc serviceImpl) ProcessUpdate(dto AccountDto) *wraped_error.Error {
 	return nil
 }
 
-func (svc serviceImpl) ProcessGetAccount(name string) ([]AccountListDto, *wraped_error.Error) {
+func (svc serviceImpl) ProcessGetAccount(name string, account Account) ([]AccountListDto, *wraped_error.Error) {
 	accountListEntity, err := svc.repository.GetByName(name)
 	if err != nil {
 		return nil, wraped_error.WrapError(err, http.StatusInternalServerError)
 	}
+
+	fmt.Println(accountListEntity)
+
 	accountListDto := []AccountListDto{}
-	copier.Copy(&accountListDto, &accountListEntity)
+	for _, element := range accountListEntity {
+		if element.Id == account.Id {
+			continue
+		}
+		dto := AccountListDto{
+			Id:   element.Id,
+			Name: element.Name,
+		}
+		accountListDto = append(accountListDto, dto)
+	}
 	return accountListDto, nil
 }

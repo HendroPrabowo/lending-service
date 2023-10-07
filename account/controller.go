@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"lending-service/constant"
 	"lending-service/utility/response"
 	"lending-service/utility/wraped_error"
 )
@@ -67,12 +68,12 @@ func (c controller) Update(w http.ResponseWriter, r *http.Request) {
 
 func (c controller) GetAccount(w http.ResponseWriter, r *http.Request) {
 	name := r.URL.Query().Get("name")
+	account := r.Context().Value(constant.ACCOUNT).(Account)
 
-	accountListDto, err := c.service.ProcessGetAccount(name)
+	accountListDto, err := c.service.ProcessGetAccount(name, account)
 	if err != nil {
 		response.ErrorWrapped(w, err)
 		return
 	}
-
 	response.Ok(w, accountListDto)
 }

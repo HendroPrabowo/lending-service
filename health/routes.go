@@ -1,6 +1,7 @@
 package health
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -10,6 +11,7 @@ import (
 	"lending-service/config/monitoring"
 	"lending-service/constant"
 	"lending-service/utility/response"
+	"lending-service/utility/wraped_error"
 )
 
 func RegisterRoutes(r *chi.Mux) {
@@ -25,4 +27,8 @@ func RegisterRoutes(r *chi.Mux) {
 		response.Ok(w, resp)
 	}))
 	r.Get(newrelic.WrapHandleFunc(monitoring.NewrelicApp, "/status", h.HandlerFunc))
+	r.Get(newrelic.WrapHandleFunc(monitoring.NewrelicApp, "/error", func(w http.ResponseWriter, r *http.Request) {
+		err := wraped_error.WrapError(fmt.Errorf("testing error"), http.StatusInternalServerError)
+		response.ErrorWrapped(w, err)
+	}))
 }

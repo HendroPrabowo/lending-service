@@ -19,7 +19,7 @@ func InitBugsnag() {
 	}
 
 	bugsnag.Configure(bugsnag.Configuration{
-		APIKey:       releaseStage,
+		APIKey:       apiKey,
 		ReleaseStage: "development",
 	})
 
