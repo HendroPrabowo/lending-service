@@ -22,3 +22,13 @@ CREATE TABLE loan (
 	created_at TIMESTAMP NOT null default NOW(),
 	updated_at TIMESTAMP NOT null default NOW()
 );
+
+CREATE TABLE files (
+	id serial PRIMARY KEY,
+	account_id int not null,
+	type varchar(100) not null,
+	content_type varchar(50) not null,
+	file text not null,
+	created_at TIMESTAMP NOT null default NOW(),
+	updated_at TIMESTAMP NOT null default NOW()
+);
