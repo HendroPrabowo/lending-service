@@ -8,6 +8,7 @@ import (
 	"lending-service/config/database"
 	"lending-service/config/monitoring"
 	"lending-service/constant"
+	"lending-service/files"
 	"lending-service/health"
 	"lending-service/loan"
 
@@ -48,6 +49,9 @@ func main() {
 
 	loanRoutes, _ := loan.InitializeLoan()
 	loanRoutes.RegisterRoutes(r)
+
+	fileRoutes, _ := files.InitializeRoutes()
+	fileRoutes.RegisterRoutes(r)
 
 	log.Info("running on port : " + port)
 	http.ListenAndServe(":"+port, bugsnag.Handler(r))
