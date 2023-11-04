@@ -50,5 +50,5 @@ func InitPostgreOrm() {
 	}
 
 	Postgres = db
-	log.Info("connected to database POSTGRES")
+	log.Info("POSTGRES : connected to database POSTGRES")
 }
