@@ -18,6 +18,15 @@ func InitPostgreOrm() {
 	password := os.Getenv("DATABASE_PASSWORD")
 	database := os.Getenv("DATABASE_NAME")
 
+	if host == "" || port == "" || user == "" || password == "" || database == "" {
+		log.Info("POSTGRES : config from localhost")
+		host = DATABASE_HOST
+		port = DATABASE_PORT
+		user = DATABASE_USER
+		password = DATABASE_PASSWORD
+		database = DATABASE_NAME
+	}
+
 	opt := &pg.Options{
 		Addr:     host + ":" + port,
 		User:     user,
@@ -28,7 +37,7 @@ func InitPostgreOrm() {
 	var err error
 	pgConnectionString := os.Getenv("DATABASE_CONNECTION_STRING")
 	if pgConnectionString != "" {
-		log.Infof("connect using connection string url")
+		log.Infof("POSTGRES : connect using connection string url")
 		opt, err = pg.ParseURL(pgConnectionString)
 		if err != nil {
 			log.Fatal(err)
